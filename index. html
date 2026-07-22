@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Klik Kotak</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #info {
+      font-size: 20px;
+      margin: 15px 0;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 500px;
+      margin: 20px auto;
+      border: 3px solid #333;
+      border-radius: 12px;
+      background: white;
+      overflow: hidden;
+    }
+
+    #target {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: crimson;
+      border-radius: 12px;
+      display: none;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #message {
+      font-size: 22px;
+      color: green;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Game Klik Kotak</h1>
+  <div id="info">
+    Skor: <span id="score">0</span> |
+    Waktu: <span id="time">15</span>
+  </div>
+
+  <button onclick="startGame()">Mulai Game</button>
+
+  <div id="gameArea">
+    <div id="target" onclick="hitTarget()"></div>
+  </div>
+
+  <div id="message"></div>
+
+  <script>
+    let score = 0;
+    let timeLeft = 15;
+    let gameInterval;
+    let timerInterval;
+
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const target = document.getElementById("target");
+    const gameArea = document.getElementById("gameArea");
+    const messageEl = document.getElementById("message");
+
+    function startGame() {
+      score = 0;
+      timeLeft = 15;
+      scoreEl.textContent = score;
+      timeEl.textContent = timeLeft;
+      messageEl.textContent = "";
+      target.style.display = "block";
+
+      clearInterval(gameInterval);
+      clearInterval(timerInterval);
+
+      moveTarget();
+
+      gameInterval = setInterval(moveTarget, 700);
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+          clearInterval(gameInterval);
+          clearInterval(timerInterval);
+          target.style.display = "none";
+          messageEl.textContent = "Game selesai! Skor kamu: " + score;
+        }
+      }, 1000);
+    }
+
+    function moveTarget() {
+      const maxX = gameArea.clientWidth - 60;
+      const maxY = gameArea.clientHeight - 60;
+
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
+
+      target.style.left = x + "px";
+      target.style.top = y + "px";
+    }
+
+    function hitTarget() {
+      score++;
+      scoreEl.textContent = score;
+      moveTarget();
+    }
+  </script>
+</body>
+</html>
